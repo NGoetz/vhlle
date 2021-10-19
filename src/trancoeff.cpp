@@ -4,7 +4,7 @@
 #include "trancoeff.h"
 #include "inc.h"
 
-TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, EoS *_eos) {
+TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, EoS *_eos) {
  etaS = _etaS;
  zetaS0 = _zetaS;
  etaS0=_etaS0;
@@ -12,6 +12,8 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  ah=_ah;
  al=_al;
  ahr=_ahr;
+ rhodecay=_rhodecay;
+ T0=_T0;
  eos = _eos;
 }
 
@@ -31,20 +33,24 @@ double TransportCoeff::zetaS(double e, double T)
  return zetaS0 * (1. / 3. - eos->cs2(e)) / (exp((0.16 - T) / 0.001) + 1.);
 }
 
-double TransportCoeff::etaSfun(double e,double rho)
+double TransportCoeff::etaSfun(double e,double rho, double T)
 {
- double etaS=etaS0+  ((e>eps0) ? 3e-3*ah*(e-eps0) :  3e-3*al*(e-eps0))+  ( 3e-2*ahr*(rho));
+ double etaS;
+ if(T0>0){
+   etaS=etaS0+  ((T>T0) ? ah*(T-T0) :  al*(T-T0));
+ }
+ etaS=etaS0+  ((e>eps0) ? ah*(e-eps0)*(1./(1.+rhodecay*rho)) :  al*(e-eps0))+  ( ahr*rho*(1./(1.+rhodecay*rho)));
  return etaS;
 }
 
 void TransportCoeff::getEta(double e, double rho, double T, double &_etaS, double &_zetaS) {
- _etaS = etaSfun(e,rho);
+ _etaS = etaSfun(e,rho, T);
  _zetaS = zetaS(e,T);
 }
 
 void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, double &_tauPi) {
  if (T > 0.) {
-  _taupi = 5. / 5.068 * etaSfun(e,rho) / T;
+  _taupi = 5. / 5.068 * etaSfun(e,rho, T) / T;
   _tauPi = 1. / 5.068 * zetaS(e,T) / (15. * pow(0.33333-eos->cs2(e),2) * T);
  } else {
   _taupi = _tauPi = 0.;

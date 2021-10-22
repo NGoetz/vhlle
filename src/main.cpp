@@ -116,7 +116,7 @@ void readParameters(char *parFile) {
    ahr = atof(parValue);
   else if (strcmp(parName, "al") == 0)
    al = atof(parValue);
-  else if (strcmp(parName, "rhodecaz") == 0)
+  else if (strcmp(parName, "rhodecay") == 0)
    rhodecay = atof(parValue);
   else if (strcmp(parName, "T0") == 0)
    T0 = atof(parValue); 

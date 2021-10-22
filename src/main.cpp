@@ -116,7 +116,7 @@ void readParameters(char *parFile) {
    ahr = atof(parValue);
   else if (strcmp(parName, "al") == 0)
    al = atof(parValue);
-  else if (strcmp(parName, "ah") == 0)
+  else if (strcmp(parName, "rhodecaz") == 0)
    rhodecay = atof(parValue);
   else if (strcmp(parName, "T0") == 0)
    T0 = atof(parValue); 
@@ -170,7 +170,7 @@ void printParameters() {
  cout << "al = " << al << endl;
  cout << "ah = " << ah << endl;
  cout << "rhodecay = " << rhodecay << endl;
- cout << "T0 = " << T0 << endl;
+ cout << "T0 =  " << T0 << endl;
  cout << "zeta/s = " << zetaS << endl;
  cout << "epsilon0 = " << epsilon0 << endl;
  cout << "Rgt = " << Rgt << "  Rgz = " << Rgz << endl;

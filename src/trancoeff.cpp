@@ -38,8 +38,10 @@ double TransportCoeff::etaSfun(double e,double rho, double T)
  double etaS;
  if(T0>0){
    etaS=etaS0+  ((T>T0) ? ah*(T-T0) :  al*(T-T0));
+ }else{
+    etaS=etaS0+  ((e>eps0) ? ah*(e-eps0)*(1./(1.+rhodecay*rho)) :  al*(e-eps0))+  ( ahr*rho*(1./(1.+rhodecay*rho)));
  }
- etaS=etaS0+  ((e>eps0) ? ah*(e-eps0)*(1./(1.+rhodecay*rho)) :  al*(e-eps0))+  ( ahr*rho*(1./(1.+rhodecay*rho)));
+
  return etaS;
 }
 

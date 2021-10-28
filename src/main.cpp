@@ -47,7 +47,7 @@ int nx, ny, nz, eosType;
 int eosTypeHadron = 0;
 double xmin, xmax, ymin, ymax, etamin, etamax, tau0, tauMax, tauResize, dtau;
 string collSystem, outputDir, isInputFile;
-double etaS, zetaS, eCrit, etaS0, eps0, ahr, al, ah, rhodecay, T0;
+double etaS, zetaS, eCrit, etaS0, eps0, ahr, al, ah, rhodecay, T0, D, E, F;
 int icModel,
     glauberVariable =
         1;  // icModel=1 for pure Glauber, 2 for table input (Glissando etc)
@@ -120,6 +120,12 @@ void readParameters(char *parFile) {
    rhodecay = atof(parValue);
   else if (strcmp(parName, "T0") == 0)
    T0 = atof(parValue); 
+  else if (strcmp(parName, "D") == 0)
+   D = atof(parValue); 
+  else if (strcmp(parName, "E") == 0)
+   E = atof(parValue); 
+  else if (strcmp(parName, "F") == 0)
+   F = atof(parValue); 
   else if (strcmp(parName, "ah") == 0)
    ah = atof(parValue);
   else if (strcmp(parName, "zetaS") == 0)
@@ -171,6 +177,9 @@ void printParameters() {
  cout << "ah = " << ah << endl;
  cout << "rhodecay = " << rhodecay << endl;
  cout << "T0 =  " << T0 << endl;
+ cout << "D = " << D << endl;
+ cout << "E = " << E << endl;
+ cout << "F =  " << F << endl;
  cout << "zeta/s = " << zetaS << endl;
  cout << "epsilon0 = " << epsilon0 << endl;
  cout << "Rgt = " << Rgt << "  Rgz = " << Rgz << endl;
@@ -274,7 +283,7 @@ std::cout<<"run updated version"<<std::endl;
 
 
  // transport coefficients
- trcoeff = new TransportCoeff(etaS, zetaS,etaS0, eps0, ahr, ah, al, rhodecay, T0, eos);
+ trcoeff = new TransportCoeff(etaS, zetaS,etaS0, eps0, ahr, ah, al, rhodecay, T0, D, E, F, eos);
 
  f = new Fluid(eos, eosH, trcoeff, nx, ny, nz, xmin, xmax, ymin, ymax, etamin,
                etamax, dtau, eCrit);

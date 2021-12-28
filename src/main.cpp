@@ -119,13 +119,13 @@ void readParameters(char *parFile) {
   else if (strcmp(parName, "rhodecay") == 0)
    rhodecay = atof(parValue);
   else if (strcmp(parName, "T0") == 0)
-   T0 = atof(parValue); 
+   T0 = atof(parValue);
   else if (strcmp(parName, "D") == 0)
-   D = atof(parValue); 
+   D = atof(parValue);
   else if (strcmp(parName, "E") == 0)
-   E = atof(parValue); 
+   E = atof(parValue);
   else if (strcmp(parName, "F") == 0)
-   F = atof(parValue); 
+   F = atof(parValue);
   else if (strcmp(parName, "ah") == 0)
    ah = atof(parValue);
   else if (strcmp(parName, "zetaS") == 0)
@@ -370,7 +370,7 @@ std::cout<<"run updated version"<<std::endl;
  time(&end);
  float diff2 = difftime(end, start);
  cout << "Execution time = " << diff2 << " [sec]" << endl;
-
+ f->outputEta(*trcoeff);
  delete f;
  delete h;
  delete eos;

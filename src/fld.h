@@ -66,5 +66,6 @@ public:
  void outputGnuplot(double tau);
  void outputSurface(double tau);
  void outputCorona(double tau);
+ void outputEta(TransportCoeff trCoeff);
  void InitialAnisotropies(double tau0);
 };

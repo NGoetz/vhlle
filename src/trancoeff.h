@@ -15,6 +15,7 @@ public:
  void printZetaT();
  // returns (optionally temperature dependent) eta/s and zeta/s
  void getEta(double e, double rho, double T, double &_etaS, double &_zetaS);
+ void saveEta(double e, double rho, double T, double nx, double ny, double nz);
  // returns shear and bulk relaxation times
  void getTau(double e, double rho, double T, double &_taupi, double &_tauPi);
  // deltapipi, taupipi, lambdapiPi * divided by tau_pi * !
@@ -35,4 +36,7 @@ public:
   else
    return false;
  }
+ long double sum_eta_s;
+ long double sum_epsilon;
+ long double sum_eta_s_weigh;
 };

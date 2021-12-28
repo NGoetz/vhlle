@@ -37,7 +37,7 @@ using namespace std;
 
 namespace output{  // a namespace containing all the output streams
   ofstream fkw, fkw_dim, fxvisc, fyvisc, fdiagvisc, fx,
-     fy, fdiag, fz, faniz, f2d, ffreeze;
+     fy, fdiag, fz, faniz, f2d, ffreeze, feta;
 }
 
 // returns the velocities in cartesian coordinates, fireball rest frame.
@@ -136,6 +136,8 @@ void Fluid::initOutput(const char *dir, double tau0) {
  out2d.append("/out2D.dat");
  string outfreeze = dir;
  outfreeze.append("/freezeout.dat");
+ string outeta = dir;
+ outeta.append("/eta.dat");
  output::fx.open(outx.c_str());
  output::fy.open(outy.c_str());
  output::fz.open(outz.c_str());
@@ -146,6 +148,7 @@ void Fluid::initOutput(const char *dir, double tau0) {
  output::fdiagvisc.open(outdiagvisc.c_str());
  output::faniz.open(outaniz.c_str());
  output::ffreeze.open(outfreeze.c_str());
+ output::feta.open(outeta.c_str());
  //################################################################
  // important remark. for correct diagonal output, nx=ny must hold.
  //################################################################
@@ -431,6 +434,11 @@ void transformToLab(double eta, double &vx, double &vy, double &vz) {
  vx = vx * cosh(Y - eta) / cosh(Y);
  vy = vy * cosh(Y - eta) / cosh(Y);
  vz = tanh(Y);
+}
+
+void Fluid::outputEta(TransportCoeff trCoeff) {
+  output::feta.precision(15);
+  output::feta <<"average eta/s, weighted by epsilon" << trCoeff.sum_eta_s/trCoeff.sum_epsilon << "  average eta/s, weighted by epsilon and number of cells "<< trCoeff.sum_eta_s_weigh/trCoeff.sum_epsilon <<endl;
 }
 
 void Fluid::outputSurface(double tau) {

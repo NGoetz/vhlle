@@ -18,6 +18,8 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  D=_D;
  E=_E;
  F=_F;
+ sum_eta_s=0;
+ sum_epsilon=0;
 }
 
 void TransportCoeff::printZetaT()
@@ -44,13 +46,20 @@ double TransportCoeff::etaSfun(double e,double rho, double T)
  }else{
     etaS=etaS0+ std::max(0.0,((e>eps0) ? (1.0/(1+D*rho*std::tanh(e-eps0))*(ah*(e-eps0)+ahr*rho*(1+F*(e-eps0))) ): al*(e-eps0)+ahr*rho*(1+E*(e-eps0*rho*rho*rho))));
  }
-
  return etaS;
 }
 
 void TransportCoeff::getEta(double e, double rho, double T, double &_etaS, double &_zetaS) {
  _etaS = etaSfun(e,rho, T);
  _zetaS = zetaS(e,T);
+}
+
+void TransportCoeff::saveEta(double e, double rho, double T, double nx, double ny, double nz){
+  double etaS=etaSfun(e,rho,T);
+  sum_eta_s+=etaS*e;
+  sum_epsilon+=e;
+  //most likely not needed
+  sum_eta_s_weigh+=etaS*e/(nx*ny*nz);
 }
 
 void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, double &_tauPi) {

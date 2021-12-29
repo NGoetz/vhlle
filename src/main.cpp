@@ -359,6 +359,7 @@ std::cout<<"run updated version"<<std::endl;
    h->performStep();
   f->outputGnuplot(h->getTau());
   f->outputSurface(h->getTau());
+  f->outputEta(*trcoeff);
   if(h->getTau()>=tauResize and resized==false) {
    cout << "grid resize\n";
    f = expandGrid2x(h, eos, eosH, trcoeff);
@@ -370,7 +371,7 @@ std::cout<<"run updated version"<<std::endl;
  time(&end);
  float diff2 = difftime(end, start);
  cout << "Execution time = " << diff2 << " [sec]" << endl;
- f->outputEta(*trcoeff);
+
  delete f;
  delete h;
  delete eos;

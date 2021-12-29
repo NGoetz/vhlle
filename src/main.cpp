@@ -359,7 +359,7 @@ std::cout<<"run updated version"<<std::endl;
    h->performStep();
   f->outputGnuplot(h->getTau());
   f->outputSurface(h->getTau());
-  f->outputEta(*trcoeff);
+  f->outputEta(trcoeff);
   if(h->getTau()>=tauResize and resized==false) {
    cout << "grid resize\n";
    f = expandGrid2x(h, eos, eosH, trcoeff);

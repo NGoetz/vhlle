@@ -22,6 +22,7 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  sum_epsilon=0;
  sum_eta_s_weight=0;
  sum_weight=0;
+ num=0;
  if(etaS0==0 && etaS>0)
   etaS0=etaS;
 }
@@ -62,9 +63,11 @@ void TransportCoeff::saveEta(double e, double rho, double T, double nx, double n
   double etaS=etaSfun(e,rho,T);
   sum_eta_s+=etaS*e;
   sum_epsilon+=e;
-  sum_weight+=1/(nx*ny*nz);
+  sum_weight+=1.0/(nx*ny*nz);
   //most likely not needed
-  sum_eta_s_weight+=etaS*e/(nx*ny*nz);
+  num+=1;
+  sum_eta_s_weight+=(etaS*e)/(nx*ny*nz);
+
 }
 
 void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, double &_tauPi) {

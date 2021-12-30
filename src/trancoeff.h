@@ -38,6 +38,6 @@ public:
  }
  long double sum_eta_s;
  long double sum_epsilon;
- long double sum_eta_s_weigh;
+ long double sum_eta_s_weight;
  long double sum_weight;
 };

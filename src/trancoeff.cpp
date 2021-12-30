@@ -21,6 +21,8 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  sum_eta_s=0;
  sum_epsilon=0;
  sum_eta_s_weigh=0;
+ if(etaS0==0 && etaS>0)
+  etaS0=etaS;
 }
 
 void TransportCoeff::printZetaT()

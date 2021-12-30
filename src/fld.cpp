@@ -438,7 +438,7 @@ void transformToLab(double eta, double &vx, double &vy, double &vz) {
 
 void Fluid::outputEta(TransportCoeff* trCoeff) {
   output::feta.precision(15);
-  output::feta <<"average eta/s, weighted by epsilon " << trCoeff->sum_eta_s/trCoeff->sum_epsilon << "  average eta/s, weighted by epsilon and number of cells "<< trCoeff->sum_eta_s_weigh/trCoeff->sum_epsilon <<endl;
+  output::feta <<"average eta/s, weighted by epsilon " << trCoeff->sum_eta_s/trCoeff->sum_epsilon << "  average eta/s, weighted by epsilon and number of cells "<< trCoeff->sum_eta_s_weigh/(trCoeff->sum_epsilon*trCoeff->sum_weight) <<endl;
 }
 
 void Fluid::outputSurface(double tau) {

@@ -74,6 +74,7 @@ void TransportCoeff::saveEta(double e, double rho, double T, double nx, double n
     sum_eta_s_current=etaS*e;
     sum_epsilon=e;
   }
+  outputCell(e,rho,tau_);
 
 }
 

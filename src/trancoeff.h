@@ -10,13 +10,14 @@ class TransportCoeff {
  double zetaS(double e, double T);
  double etaSfun(double e, double rho, double T);
 public:
- TransportCoeff(double _etaS, double _zetaS, double etaS0, double _eps, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos);
+ TransportCoeff(double _etaS, double _zetaS, double etaS0, double _eps, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos, std::string outputdir);
  ~TransportCoeff(){};
  void printZetaT();
  // returns (optionally temperature dependent) eta/s and zeta/s
  void getEta(double e, double rho, double T, double &_etaS, double &_zetaS);
- void saveEta(double e, double rho, double T, double nx, double ny, double nz);
+ void saveEta(double e, double rho, double T, double nx, double ny, double nz, double tau);
  // returns shear and bulk relaxation times
+ void outputCell(double e, double rho, double tau);
  void getTau(double e, double rho, double T, double &_taupi, double &_tauPi);
  // deltapipi, taupipi, lambdapiPi * divided by tau_pi * !
  void getOther(double e, double nb, double nq, double ns,
@@ -38,7 +39,8 @@ public:
  }
  long double sum_eta_s;
  long double sum_epsilon;
- long double sum_eta_s_weight;
- long double sum_weight;
- long num;
+ long double sum_eta_s_current;
+ long double sum_epsilon_current;
+ double tau;
+ std::string OutputDir;
 };

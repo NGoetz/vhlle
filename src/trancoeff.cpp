@@ -3,8 +3,9 @@
 #include "eos.h"
 #include "trancoeff.h"
 #include "inc.h"
+#include <fstream>
 
-TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos) {
+TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos, std::string outputdir ) {
  etaS = _etaS;
  zetaS0 = _zetaS;
  etaS0=_etaS0;
@@ -20,9 +21,10 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  F=_F;
  sum_eta_s=0;
  sum_epsilon=0;
- sum_eta_s_weight=0;
- sum_weight=0;
- num=0;
+ sum_eta_s_current=0;
+ sum_epsilon_current=0;
+ tau=0;
+ OutputDir=outputdir;
  if(etaS0==0 && etaS>0)
   etaS0=etaS;
 }
@@ -59,15 +61,29 @@ void TransportCoeff::getEta(double e, double rho, double T, double &_etaS, doubl
  _zetaS = zetaS(e,T);
 }
 
-void TransportCoeff::saveEta(double e, double rho, double T, double nx, double ny, double nz){
+void TransportCoeff::saveEta(double e, double rho, double T, double nx, double ny, double nz, double tau_){
   double etaS=etaSfun(e,rho,T);
   sum_eta_s+=etaS*e;
   sum_epsilon+=e;
-  sum_weight+=1.0/(nx*ny*nz);
-  //most likely not needed
-  num+=1;
-  sum_eta_s_weight+=(etaS*e)/(nx*ny*nz);
+  if(tau==tau_){
+    sum_eta_s_current+=etaS*e;
+    sum_epsilon+=e;
 
+  }else{
+    tau=tau_;
+    sum_eta_s_current=etaS*e;
+    sum_epsilon=e;
+  }
+
+}
+
+void TransportCoeff::outputCell(double e, double rho, double tau) {
+  std::string outcells = OutputDir;
+  std::ofstream fcells;
+  outcells.append("/cells.dat");
+  fcells.open(outcells.c_str());
+  fcells.precision(15);
+  fcells << tau <<","<<e<<","<<rho<<std::endl;
 }
 
 void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, double &_tauPi) {

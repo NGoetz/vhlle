@@ -1,3 +1,4 @@
+#include <fstream>
 class EoS;
 
 // this class contains the information about the transport coefficients
@@ -43,4 +44,6 @@ public:
  long double sum_epsilon_current;
  double tau;
  std::string OutputDir;
+ std::ofstream fcells;
+ std::string outcells;
 };

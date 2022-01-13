@@ -3,7 +3,7 @@
 #include "eos.h"
 #include "trancoeff.h"
 #include "inc.h"
-#include <fstream>
+
 
 TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos, std::string outputdir ) {
  etaS = _etaS;
@@ -24,7 +24,10 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  sum_eta_s_current=0;
  sum_epsilon_current=0;
  tau=0;
- OutputDir=outputdir;
+ std::string outcells = outputdir;
+ outcells.append("/cells.dat");
+ fcells.open(outcells.c_str());
+ //fcells.close();
  if(etaS0==0 && etaS>0)
   etaS0=etaS;
 }
@@ -67,24 +70,22 @@ void TransportCoeff::saveEta(double e, double rho, double T, double nx, double n
   sum_epsilon+=e;
   if(tau==tau_){
     sum_eta_s_current+=etaS*e;
-    sum_epsilon+=e;
+    sum_epsilon_current+=e;
 
   }else{
     tau=tau_;
     sum_eta_s_current=etaS*e;
-    sum_epsilon=e;
+    sum_epsilon_current=e;
   }
   outputCell(e,rho,tau_);
 
 }
 
 void TransportCoeff::outputCell(double e, double rho, double tau) {
-  std::string outcells = OutputDir;
-  std::ofstream fcells;
-  outcells.append("/cells.dat");
-  fcells.open(outcells.c_str());
-  fcells.precision(15);
-  fcells << tau <<","<<e<<","<<rho<<std::endl;
+    //fcells.open(outcells.c_str(),std::ofstream::app);
+    fcells.precision(15);
+    fcells << tau <<","<<e<<","<<rho<<std::endl;
+    //fcells.close();
 }
 
 void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, double &_tauPi) {

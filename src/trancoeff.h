@@ -43,9 +43,9 @@ public:
  long double sum_eta_s_current;
  long double sum_epsilon_current;
  double tau;
- int nx;
- int ny;
- int nz;
+ double nx;
+ double ny;
+ double nz;
  std::string OutputDir;
  std::ofstream fcells;
  std::string outcells;

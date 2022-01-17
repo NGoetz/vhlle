@@ -5,7 +5,7 @@
 #include "inc.h"
 
 
-TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos, std::string outputdir, int nx, int ny, int nz ) {
+TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos, std::string outputdir, int _nx, int _ny, int _nz ) {
  etaS = _etaS;
  zetaS0 = _zetaS;
  etaS0=_etaS0;
@@ -30,9 +30,9 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  //fcells.close();
  if(etaS0==0 && etaS>0)
   etaS0=etaS;
- nx=nx;
- ny=ny;
- nz=nz;
+ nx=_nx;
+ ny=_ny;
+ nz=_nz;
 }
 
 void TransportCoeff::printZetaT()
@@ -68,7 +68,7 @@ void TransportCoeff::getEta(double e, double rho, double T, double &_etaS, doubl
 }
 
 void TransportCoeff::saveEta(double e, double rho, double T, int ix, int iy, int iz, double tau_){
-  if(ix<nx/2.0 +1 && ix>nx/2.0 -1 && iy<ny/2.0 +1 && iy>ny/2.0 -1 &&iz<nz/2.0 +1 && iz>nz/2.0 -1 ){
+  if(ix<nx/2.0 +1 && ix>nx/2.0 -2 && iy<ny/2.0 +1 && iy>ny/2.0 -2 &&iz<nz/2.0 +1 && iz>nz/2.0 -2 ){
     double etaS=etaSfun(e,rho,T);
     sum_eta_s+=etaS*e;
     sum_epsilon+=e;
@@ -89,10 +89,8 @@ void TransportCoeff::saveEta(double e, double rho, double T, int ix, int iy, int
 }
 
 void TransportCoeff::outputCell(double e, double rho, double tau, int ix, int iy, int iz) {
-    //fcells.open(outcells.c_str(),std::ofstream::app);
     fcells.precision(15);
     fcells << tau <<","<<ix<<","<<iy<<","<<iz<<","<<e<<","<<rho<<std::endl;
-    //fcells.close();
 }
 
 void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, double &_tauPi) {

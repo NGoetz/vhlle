@@ -11,7 +11,7 @@ class TransportCoeff {
  double zetaS(double e, double T);
  double etaSfun(double e, double rho, double T);
 public:
- TransportCoeff(double _etaS, double _zetaS, double etaS0, double _eps, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos, std::string outputdir, int nx, int ny, int nz);
+ TransportCoeff(double _etaS, double _zetaS, double etaS0, double _eps, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos, std::string outputdir, int nx, int ny, int nz, double eCrit);
  ~TransportCoeff(){};
  void printZetaT();
  // returns (optionally temperature dependent) eta/s and zeta/s
@@ -46,6 +46,7 @@ public:
  double nx;
  double ny;
  double nz;
+ double eCrit;
  std::string OutputDir;
  std::ofstream fcells;
  std::string outcells;

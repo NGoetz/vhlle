@@ -283,7 +283,7 @@ std::cout<<"run updated version"<<std::endl;
 
 
  // transport coefficients
- trcoeff = new TransportCoeff(etaS, zetaS,etaS0, eps0, ahr, ah, al, rhodecay, T0, D, E, F, eos,outputDir.c_str(),nx,nx,nz);
+ trcoeff = new TransportCoeff(etaS, zetaS,etaS0, eps0, ahr, ah, al, rhodecay, T0, D, E, F, eos,outputDir.c_str(),nx,nx,nz,eCrit);
 
  f = new Fluid(eos, eosH, trcoeff, nx, ny, nz, xmin, xmax, ymin, ymax, etamin,
                etamax, dtau, eCrit);

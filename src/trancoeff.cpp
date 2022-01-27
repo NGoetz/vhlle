@@ -40,7 +40,7 @@ double TransportCoeff::zetaS(double e, double T)
  }else{
     zetaS=zetaS0/(1+pow(((e-eps0)/zwidth),2.0));
  }
- return zetaS0 * (1. / 3. - eos->cs2(e)) / (exp((0.16 - T) / 0.001) + 1.);
+ return zetaS;
 }
 
 double TransportCoeff::etaSfun(double e,double rho, double T)

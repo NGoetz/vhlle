@@ -649,7 +649,7 @@ void Hydro::ISformal() {
      eos->eos(e, nb, nq, ns, T, mub, muq, mus, p);
      double etaS, zetaS;
      trcoeff->getEta(e,nb, T, etaS, zetaS);
-     trcoeff->saveEta(e,nb, T,ix,iy,iz,tau);
+     trcoeff->saveEta(e,nb, T, mub,ix,iy,iz,tau);
      const double s = eos->s(e, nb, nq, ns);
      const double eta = etaS * s;
      // auxiliary variable sigmaNS = piNS / (2*eta),

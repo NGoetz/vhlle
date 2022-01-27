@@ -68,7 +68,7 @@ void TransportCoeff::getEta(double e, double rho, double T, double &_etaS, doubl
  _zetaS = zetaS(e,T);
 }
 
-void TransportCoeff::saveEta(double e, double rho, double T, int ix, int iy, int iz, double tau_){
+void TransportCoeff::saveEta(double e, double rho, double T,double muB, int ix, int iy, int iz, double tau_){
   //if(ix<nx/2.0 +1 && ix>nx/2.0 -2 && iy<ny/2.0 +1 && iy>ny/2.0 -2 &&iz<nz/2.0 +1 && iz>nz/2.0 -2 ){
   if(e>=eCrit ){
     double etaS=etaSfun(e,rho,T);
@@ -83,16 +83,16 @@ void TransportCoeff::saveEta(double e, double rho, double T, int ix, int iy, int
       sum_eta_s_current=etaS*e;
       sum_epsilon_current=e;
     }
-    outputCell(e,rho,tau_,ix,iy,iz);
+    outputCell(e,rho,T,muB,tau_,ix,iy,iz);
 
   }
 
 
 }
 
-void TransportCoeff::outputCell(double e, double rho, double tau, int ix, int iy, int iz) {
+void TransportCoeff::outputCell(double e, double rho, double T, double muB, double tau, int ix, int iy, int iz) {
     fcells.precision(15);
-    fcells << tau <<","<<ix<<","<<iy<<","<<iz<<","<<e<<","<<rho<<std::endl;
+    fcells << tau <<","<<ix<<","<<iy<<","<<iz<<","<<e<<","<<rho<<","<<T<<","<<muB<<std::endl;
 }
 
 void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, double &_tauPi) {

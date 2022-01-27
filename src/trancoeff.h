@@ -16,9 +16,9 @@ public:
  void printZetaT();
  // returns (optionally temperature dependent) eta/s and zeta/s
  void getEta(double e, double rho, double T, double &_etaS, double &_zetaS);
- void saveEta(double e, double rho, double T, int ix, int iy, int iz, double tau);
+ void saveEta(double e, double rho, double T, double muB, int ix, int iy, int iz, double tau);
  // returns shear and bulk relaxation times
- void outputCell(double e, double rho, double tau, int ix, int iy, int iz);
+ void outputCell(double e, double rho,double T, double muB, double tau, int ix, int iy, int iz);
  void getTau(double e, double rho, double T, double &_taupi, double &_tauPi);
  // deltapipi, taupipi, lambdapiPi * divided by tau_pi * !
  void getOther(double e, double nb, double nq, double ns,

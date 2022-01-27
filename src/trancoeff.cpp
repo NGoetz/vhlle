@@ -4,7 +4,7 @@
 #include "trancoeff.h"
 #include "inc.h"
 
-TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos) {
+TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, double _zwidth,EoS *_eos) {
  etaS = _etaS;
  zetaS0 = _zetaS;
  etaS0=_etaS0;
@@ -18,6 +18,7 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  D=_D;
  E=_E;
  F=_F;
+ zwidth=_zwidth;
 }
 
 void TransportCoeff::printZetaT()
@@ -33,6 +34,12 @@ void TransportCoeff::printZetaT()
 
 double TransportCoeff::zetaS(double e, double T)
 {
+ double zetaS;
+ if(T0>0){
+   zetaS=zetaS0/(1+pow(((T-T0)/zwidth),2.0));
+ }else{
+    zetaS=zetaS0/(1+pow(((e-eps0)/zwidth),2.0));
+ }
  return zetaS0 * (1. / 3. - eos->cs2(e)) / (exp((0.16 - T) / 0.001) + 1.);
 }
 

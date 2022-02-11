@@ -54,13 +54,16 @@ double TransportCoeff::zetaS(double e, double T)
 
 double TransportCoeff::etaSfun(double e,double rho, double T)
 {
- double etaS;
- if(T0>0){
-   etaS=etaS0+  ((T>T0) ? ah*(T-T0) :  al*(T-T0));
- }else{
-    etaS=etaS0+ std::max(0.0,((e>eps0) ? (1.0/(1+D*rho*std::tanh(e-eps0))*(ah*(e-eps0)+ahr*rho*(1+F*(e-eps0))) ): al*(e-eps0)+ahr*rho*(1+E*(e-eps0*rho*rho*rho))));
+ double etaSreturner;
+ if(etaS0<0){
+   return etaS;
  }
- return etaS;
+ if(T0>0){
+   etaSreturner=etaS0+  ((T>T0) ? ah*(T-T0) :  al*(T-T0));
+ }else{
+  etaSreturner=std::max(0.0,etaS0+((e>eps0) ? (1.0/(1+D*rho*std::tanh(e-eps0))*(ah*(e-eps0)+ahr*rho*(1+F*(e-eps0))) ): al*(e-eps0)+ahr*rho*(1+E*(e-eps0*rho*rho*rho))));
+ }
+ return etaSreturner;
 }
 
 void TransportCoeff::getEta(double e, double rho, double T, double &_etaS, double &_zetaS) {

@@ -5,7 +5,8 @@
 #include "inc.h"
 
 
-TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, EoS *_eos, std::string outputdir, int _nx, int _ny, int _nz, double _eCrit ) {
+TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F,double _zwidth, EoS *_eos, std::string outputdir,double _eCrit ) {
+
  etaS = _etaS;
  zetaS0 = _zetaS;
  etaS0=_etaS0;
@@ -19,21 +20,14 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  D=_D;
  E=_E;
  F=_F;
- sum_eta_s=0;
- sum_epsilon=0;
- sum_eta_s_current=0;
- sum_epsilon_current=0;
- tau=0;
- std::string outcells = outputdir;
- outcells.append("/cells.dat");
- fcells.open(outcells.c_str());
- //fcells.close();
+
  if(etaS0==0 && etaS>0)
   etaS0=etaS;
- nx=_nx;
- ny=_ny;
- nz=_nz;
+
  eCrit=_eCrit;
+
+ zwidth=_zwidth;
+
 }
 
 void TransportCoeff::printZetaT()
@@ -49,7 +43,13 @@ void TransportCoeff::printZetaT()
 
 double TransportCoeff::zetaS(double e, double T)
 {
- return zetaS0 * (1. / 3. - eos->cs2(e)) / (exp((0.16 - T) / 0.001) + 1.);
+ double zetaS;
+ if(T0>0){
+   zetaS=zetaS0/(1+pow(((T-T0)/zwidth),2.0));
+ }else{
+    zetaS=zetaS0/(1+pow(((e-eps0)/zwidth),2.0));
+ }
+ return zetaS;
 }
 
 double TransportCoeff::etaSfun(double e,double rho, double T)

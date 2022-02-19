@@ -12,9 +12,7 @@ class TransportCoeff {
  double etaSfun(double e, double rho, double T);
 public:
 
- TransportCoeff(double _etaS, double _zetaS, double etaS0, double _eps, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F,double _zwidth, EoS *_eos, std::string outputdirdouble eCrit);
-
- TransportCoeff(double _etaS, double _zetaS, double etaS0, double _eps, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F, double _zwidth, EoS *_eos);
+ TransportCoeff(double _etaS, double _zetaS, double etaS0, double _eps, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F,double _zwidth, EoS *_eos, std::string outputdir,double eCrit);
 
  ~TransportCoeff(){};
  void printZetaT();

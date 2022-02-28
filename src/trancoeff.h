@@ -1,3 +1,4 @@
+
 #include <fstream>
 class EoS;
 
@@ -14,7 +15,7 @@ public:
 
  TransportCoeff(double _etaS, double _zetaS, double etaS0, double _eps, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F,double _zwidth, EoS *_eos, std::string outputdir,double eCrit);
 
- ~TransportCoeff(){};
+ ~TransportCoeff(){fcells.close();};
  void printZetaT();
  // returns (optionally temperature dependent) eta/s and zeta/s
  void getEta(double e, double rho, double T, double &_etaS, double &_zetaS);

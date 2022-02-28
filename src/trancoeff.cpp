@@ -4,9 +4,7 @@
 #include "trancoeff.h"
 #include "inc.h"
 
-
-TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F,double _zwidth, EoS *_eos, std::string outputdir,double _eCrit ) {
-
+TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, double _eps0, double _ahr, double _ah,double _al, double _rhodecay, double _T0, double _D, double _E, double _F,double _zwidth, EoS *_eos, std::string outputdir,double _eCrit) {
  etaS = _etaS;
  zetaS0 = _zetaS;
  etaS0=_etaS0;
@@ -20,6 +18,8 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  D=_D;
  E=_E;
  F=_F;
+ outcells.append("/cells.dat");
+ fcells.open(outcells.c_str());
 
  if(etaS0==0 && etaS>0)
   etaS0=etaS;
@@ -27,7 +27,6 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  eCrit=_eCrit;
 
  zwidth=_zwidth;
-
 }
 
 void TransportCoeff::printZetaT()
@@ -71,8 +70,7 @@ void TransportCoeff::getEta(double e, double rho, double T, double &_etaS, doubl
  _zetaS = zetaS(e,T);
 }
 
-void TransportCoeff::saveEta(double e, double rho, double T,double muB, int ix, int iy, int iz, double tau_){
-  //if(ix<nx/2.0 +1 && ix>nx/2.0 -2 && iy<ny/2.0 +1 && iy>ny/2.0 -2 &&iz<nz/2.0 +1 && iz>nz/2.0 -2 ){
+void TransportCoeff::saveEta(double e, double rho, double T, double muB, int ix, int iy, int iz, double tau_){
   if(e>=eCrit ){
     double etaS=etaSfun(e,rho,T);
     sum_eta_s+=etaS*e;
@@ -90,12 +88,6 @@ void TransportCoeff::saveEta(double e, double rho, double T,double muB, int ix, 
 
   }
 
-
-}
-
-void TransportCoeff::outputCell(double e, double rho, double T, double muB, double tau, int ix, int iy, int iz) {
-    fcells.precision(15);
-    fcells << tau <<","<<ix<<","<<iy<<","<<iz<<","<<e<<","<<rho<<","<<T<<","<<muB<<std::endl;
 }
 
 void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, double &_tauPi) {
@@ -105,4 +97,9 @@ void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, doub
  } else {
   _taupi = _tauPi = 0.;
  }
+}
+
+void TransportCoeff::outputCell(double e, double rho, double T, double muB, double tau, int ix, int iy, int iz) {
+    fcells.precision(15);
+    fcells << tau <<","<<ix<<","<<iy<<","<<iz<<","<<e<<","<<rho<<","<<T<<","<<muB<<std::endl;
 }

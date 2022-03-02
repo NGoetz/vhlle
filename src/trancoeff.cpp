@@ -18,6 +18,13 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  D=_D;
  E=_E;
  F=_F;
+ sum_eta_s=0;
+ sum_zeta_s=0;
+ sum_epsilon=0;
+ sum_eta_s_current=0;
+ sum_zeta_s_current=0;
+ sum_epsilon_current=0;
+ tau=0;
  outcells.append("/cells.dat");
  fcells.open(outcells.c_str());
 
@@ -27,6 +34,7 @@ TransportCoeff::TransportCoeff(double _etaS, double _zetaS, double _etaS0, doubl
  eCrit=_eCrit;
 
  zwidth=_zwidth;
+ eCrit=_eCrit;
 }
 
 void TransportCoeff::printZetaT()
@@ -35,12 +43,12 @@ void TransportCoeff::printZetaT()
  for(double e=0.1; e<3.0; e+=0.1){
   double T, mub, muq, mus, p;
   eos->eos(e, 0., 0., 0., T, mub, muq, mus, p);
-  std::cout << std::setw(14) << T << std::setw(14) << zetaS(e, T) << std::endl;
+  std::cout << std::setw(14) << T << std::setw(14) << zetaSfun(e, T) << std::endl;
  }
  std::cout << "---------------:\n";
 }
 
-double TransportCoeff::zetaS(double e, double T)
+double TransportCoeff::zetaSfun(double e, double T)
 {
  double zetaS;
  if(T0>0){
@@ -67,21 +75,25 @@ double TransportCoeff::etaSfun(double e,double rho, double T)
 
 void TransportCoeff::getEta(double e, double rho, double T, double &_etaS, double &_zetaS) {
  _etaS = etaSfun(e,rho, T);
- _zetaS = zetaS(e,T);
+ _zetaS = zetaSfun(e,T);
 }
 
 void TransportCoeff::saveEta(double e, double rho, double T, double muB, int ix, int iy, int iz, double tau_){
   if(e>=eCrit ){
     double etaS=etaSfun(e,rho,T);
+    double zetaS=zetaSfun(e,T);
     sum_eta_s+=etaS*e;
+    sum_zeta_s+=zetaS*e;
     sum_epsilon+=e;
     if(tau==tau_){
       sum_eta_s_current+=etaS*e;
+      sum_zeta_s+=zetaS*e;
       sum_epsilon_current+=e;
 
     }else{
       tau=tau_;
       sum_eta_s_current=etaS*e;
+      sum_zeta_s_current=zetaS*e;
       sum_epsilon_current=e;
     }
     outputCell(e,rho,T,muB,tau_,ix,iy,iz);
@@ -93,7 +105,7 @@ void TransportCoeff::saveEta(double e, double rho, double T, double muB, int ix,
 void TransportCoeff::getTau(double e, double rho, double T, double &_taupi, double &_tauPi) {
  if (T > 0.) {
   _taupi = 5. / 5.068 * etaSfun(e,rho, T) / T;
-  _tauPi = 1. / 5.068 * zetaS(e,T) / (15. * pow(0.33333-eos->cs2(e),2) * T);
+  _tauPi = 1. / 5.068 * zetaSfun(e,T) / (15. * pow(0.33333-eos->cs2(e),2) * T);
  } else {
   _taupi = _tauPi = 0.;
  }

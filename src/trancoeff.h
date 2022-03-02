@@ -9,7 +9,7 @@ class TransportCoeff {
  double etaS, zetaS0, etaS0,eps0,ahr,ah,al,rhodecay, T0, D, E, F,zwidth, taupi, tauPi;
  EoS *eos;  // EoS instance is needed optionally for zeta/s parametrization,
             // which depends on the speed of sound
- double zetaS(double e, double T);
+ double zetaSfun(double e, double T);
  double etaSfun(double e, double rho, double T);
 public:
 
@@ -42,8 +42,10 @@ public:
    return false;
  }
  long double sum_eta_s;
+ long double sum_zeta_s;
  long double sum_epsilon;
  long double sum_eta_s_current;
+ long double sum_zeta_s_current;
  long double sum_epsilon_current;
  double tau;
  double nx;

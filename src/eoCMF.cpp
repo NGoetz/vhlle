@@ -222,10 +222,7 @@ int EoSCMF::binary_search(double *a, int first, int last, double search_num) {
 int EoSCMF::get_ind(double eps, double n) {
 
  int nB_ind = (n + 0.5*dN) / dN;
-
- if(nB_ind<0){
-   nB_ind=0;
- }
+ if (nB_ind < 0) nB_ind = 0;
 
  double a[N_T];
 
@@ -234,7 +231,7 @@ int EoSCMF::get_ind(double eps, double n) {
  }
 
  int t_ind = binary_search(a, 0, N_T, eps);
-
+ if (t_ind >= NT) t_ind = NT-1;
 
  return t_ind;
 }
@@ -242,12 +239,9 @@ int EoSCMF::get_ind(double eps, double n) {
 double EoSCMF::get_temp(double eps, double n) {
  double el1, el2, eh1, eh2, elow, ehigh, etabval, ediff1, ediff2, temp;
  int n_ind = n / dN;
+ if (n_ind < 0) n_ind = 0;
 
  int t_ind = get_ind(eps, n);
-
- if(n_ind<0){
-   n_ind=0;
- }
 
  el1 = etab[t_ind][n_ind];
  el2 = etab[t_ind][n_ind + 1];

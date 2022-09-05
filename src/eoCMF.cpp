@@ -231,7 +231,7 @@ int EoSCMF::get_ind(double eps, double n) {
  }
 
  int t_ind = binary_search(a, 0, N_T, eps);
- if (t_ind >= NT) t_ind = NT-1;
+ if (t_ind >= N_T) t_ind = N_T-1;
 
  return t_ind;
 }

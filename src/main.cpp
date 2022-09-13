@@ -31,6 +31,7 @@
 #include "icGubser.h"
 #include "icGlissando.h"
 #include "icTrento.h"
+#include "icIPG.h"
 #include "eos.h"
 #include "eo3.h"
 #include "eo1.h"
@@ -320,6 +321,10 @@ int main(int argc, char **argv) {
    delete ic;
  } else if(icModel==7){ // IC from Trento
    IcTrento *ic = new IcTrento(f, isInputFile.c_str(), tau0, collSystem.c_str());
+   ic->setIC(f, eos);
+   delete ic;
+ } else if(icModel==8){ // IC from IPG
+   IcIPG *ic = new IcIPG(f, isInputFile.c_str(), tau0, collSystem.c_str());
    ic->setIC(f, eos);
    delete ic;
  } else {

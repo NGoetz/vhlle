@@ -22,8 +22,16 @@ private:
  double xmin, xmax, ymin, ymax, zmin, zmax;
  double dx, dy, dz;
  double ***rho;
+ double ***utau;
+ double ***ux;
+ double ***uy;
+ double ***ueta;
  double ***nrho;
  double **source;
+ double **source_utau;
+ double **source_ux;
+ double **source_uy;
+ double **source_ueta;
  static const int NP = 10000;  // dimension for particle arrays
  // auxiliary particle arrays
 
@@ -36,7 +44,7 @@ private:
 public:
  IcIPG(Fluid *f, const char *filename, double tau0, const char* setup);
  ~IcIPG();
- double interpolateGrid(double x, double y);
+ double interpolateGrid(double x, double y,double** grid);
  void setIC(Fluid *f, EoS *eos);
  double setNormalization(int npart);
 };

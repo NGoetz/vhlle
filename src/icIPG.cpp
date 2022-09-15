@@ -59,6 +59,46 @@ IcIPG::IcIPG(Fluid* f, const char* filename, double _tau0, const char* setup) {
    }
   }
  }
+ utau = new double**[nx];
+ for (int ix = 0; ix < nx; ix++) {
+  utau[ix] = new double*[ny];
+  for (int iy = 0; iy < ny; iy++) {
+   utau[ix][iy] = new double[nz];
+   for (int iz = 0; iz < nz; iz++) {
+    utau[ix][iy][iz] = 0.0;
+   }
+  }
+ }
+ ux = new double**[nx];
+ for (int ix = 0; ix < nx; ix++) {
+  ux[ix] = new double*[ny];
+  for (int iy = 0; iy < ny; iy++) {
+   ux[ix][iy] = new double[nz];
+   for (int iz = 0; iz < nz; iz++) {
+    ux[ix][iy][iz] = 0.0;
+   }
+  }
+ }
+ uy = new double**[nx];
+ for (int ix = 0; ix < nx; ix++) {
+  uy[ix] = new double*[ny];
+  for (int iy = 0; iy < ny; iy++) {
+   uy[ix][iy] = new double[nz];
+   for (int iz = 0; iz < nz; iz++) {
+    uy[ix][iy][iz] = 0.0;
+   }
+  }
+ }
+ ueta = new double**[nx];
+ for (int ix = 0; ix < nx; ix++) {
+  ueta[ix] = new double*[ny];
+  for (int iy = 0; iy < ny; iy++) {
+   ueta[ix][iy] = new double[nz];
+   for (int iz = 0; iz < nz; iz++) {
+    ueta[ix][iy][iz] = 0.0;
+   }
+  }
+ }
 
  nrho = new double**[nx];
  for (int ix = 0; ix < nx; ix++) {
@@ -106,6 +146,34 @@ IcIPG::IcIPG(Fluid* f, const char* filename, double _tau0, const char* setup) {
     source[ix][iy] = 0.0;
    }
   }
+  source_utau = new double*[n_grid];
+  for (int ix = 0; ix < n_grid; ix++) {
+   source_utau[ix] = new double[n_grid];
+   for (int iy = 0; iy < n_grid; iy++) {
+    source_utau[ix][iy] = 0.0;
+   }
+  }
+  source_ux = new double*[n_grid];
+  for (int ix = 0; ix < n_grid; ix++) {
+   source_ux[ix] = new double[n_grid];
+   for (int iy = 0; iy < n_grid; iy++) {
+    source_ux[ix][iy] = 0.0;
+   }
+  }
+  source_uy = new double*[n_grid];
+  for (int ix = 0; ix < n_grid; ix++) {
+   source_uy[ix] = new double[n_grid];
+   for (int iy = 0; iy < n_grid; iy++) {
+    source_uy[ix][iy] = 0.0;
+   }
+  }
+  source_ueta = new double*[n_grid];
+  for (int ix = 0; ix < n_grid; ix++) {
+   source_ueta[ix] = new double[n_grid];
+   for (int iy = 0; iy < n_grid; iy++) {
+    source_ueta[ix][iy] = 0.0;
+   }
+  }
 
   getline(fin, line); // read grid-max
   instream.str(line);
@@ -120,6 +188,26 @@ IcIPG::IcIPG(Fluid* f, const char* filename, double _tau0, const char* setup) {
     fin >> source[ix][iy];
    }
   }
+  for (int iy = 0; iy < n_grid; iy++) {
+   for (int ix = 0; ix < n_grid; ix++) {
+    fin >> source_utau[ix][iy];
+   }
+  }
+  for (int iy = 0; iy < n_grid; iy++) {
+   for (int ix = 0; ix < n_grid; ix++) {
+    fin >> source_ux[ix][iy];
+   }
+  }
+  for (int iy = 0; iy < n_grid; iy++) {
+   for (int ix = 0; ix < n_grid; ix++) {
+    fin >> source_uy[ix][iy];
+   }
+  }
+  for (int iy = 0; iy < n_grid; iy++) {
+   for (int ix = 0; ix < n_grid; ix++) {
+    fin >> source_ueta[ix][iy];
+   }
+  }
   nevents += 1;
   cout << "event " << nevents << "  npart = " << npart << "\n";
   makeSmoothTable(npart);
@@ -127,8 +215,16 @@ IcIPG::IcIPG(Fluid* f, const char* filename, double _tau0, const char* setup) {
   // delete source array
   for (int ix = 0; ix < n_grid; ix++) {
    delete[] source[ix];
+   delete[] source_utau[ix];
+   delete[] source_ux[ix];
+   delete[] source_uy[ix];
+   delete[] source_ueta[ix];
   }
   delete[] source;
+  delete[] source_utau;
+  delete[] source_ux;
+  delete[] source_uy;
+  delete[] source_ueta;
   getline(fin, line);
  }
 
@@ -148,15 +244,27 @@ IcIPG::~IcIPG() {
   for (int iy = 0; iy < ny; iy++) {
    delete[] rho[ix][iy];
    delete[] nrho[ix][iy];
+   delete[] utau[ix][iy];
+   delete[] ux[ix][iy];
+   delete[] uy[ix][iy];
+   delete[] ueta[ix][iy];
   }
   delete[] rho[ix];
   delete[] nrho[ix];
+  delete[] utau[ix];
+  delete[] ux[ix];
+  delete[] uy[ix];
+  delete[] ueta[ix];
  }
  delete[] rho;
  delete[] nrho;
+ delete[] utau;
+ delete[] ux;
+ delete[] uy;
+ delete[] ueta;
 }
 
-double IcIPG::interpolateGrid(double x, double y) {
+double IcIPG::interpolateGrid(double x, double y, double** grid) {
  const double dxG = (xmaxG - xminG) / (n_grid - 1);
  const double dyG = (ymaxG - yminG) / (n_grid - 1);
  int ix = (int)((x - xminG) / dxG);
@@ -172,7 +280,7 @@ double IcIPG::interpolateGrid(double x, double y) {
  double return_val = 0.;
  for (int jx = 0; jx < 2; jx++)
   for (int jy = 0; jy < 2; jy++) {
-   return_val += wx[jx] * wy[jy] * source[ix + jx][iy + jy];
+   return_val += wx[jx] * wy[jy] * grid[ix + jx][iy + jy];
   }
  return_val = std::max(return_val, 0.);
  return return_val;
@@ -189,7 +297,11 @@ void IcIPG::makeSmoothTable(int npart) {
     double fEta = 0.;
     if(fabs(eta)<eta0) fEta = 1.0;
     else if (fabs(eta)<ybeam) fEta = exp(-0.5*pow((fabs(eta)-eta0)/sigEta,2));
-    rho[ix][iy][iz] += interpolateGrid(x,y) * fEta;
+    rho[ix][iy][iz] += interpolateGrid(x,y, source) * fEta;
+    utau[ix][iy][iz] += interpolateGrid(x,y, source_utau) * fEta;
+    ux[ix][iy][iz] += interpolateGrid(x,y, source_ux) * fEta;
+    uy[ix][iy][iz] += interpolateGrid(x,y, source_uy) * fEta;
+    ueta[ix][iy][iz] += interpolateGrid(x,y, source_ueta) * fEta;
  } // Z(eta) loop
 }
 
@@ -198,7 +310,7 @@ void IcIPG::setIC(Fluid* f, EoS* eos) {
  double Jy0 = 0.0, Jint1 = 0.0, Jint3 = 0.0, Xcm = 0.0, Ycm = 0.0, Zcm = 0.0;
  double E_midrap = 0.0, Jy0_midrap = 0.0;  // same quantity at midrapidity
  double Tcm = 0.0;
- double e, p, nb;
+ double e, p, nb,utau_val,ux_val,uy_val,ueta_val;
  double total_energy = 0.0;
  for (int ix = 0; ix < nx; ix++)
   for (int iy = 0; iy < ny; iy++)
@@ -207,9 +319,12 @@ void IcIPG::setIC(Fluid* f, EoS* eos) {
     nb = 0.;
     p = eos->p(e, 0., 0., 0.);
     Cell* c = f->getCell(ix, iy, iz);
-    const double ueta = tanh(A*f->getX(ix))*sinh(ybeam-fabs(f->getZ(iz)));
-    double u[4] = {sqrt(1.0+ueta*ueta), 0., 0., ueta};
-    c->setPrimVar(eos, tau0, e, nb, 0.4*nb, 0., 0., 0., u[3]/u[0]);
+    utau_val=sNorm * utau[ix][iy][iz]/ nevents / dx / dy;
+    ux_val=sNorm * ux[ix][iy][iz]/ nevents / dx / dy;
+    uy_val=sNorm * uy[ix][iy][iz]/ nevents / dx / dy;
+    ueta_val=sNorm * ueta[ix][iy][iz]/ nevents / dx / dy;
+    double u[4] = {utau_val,ux_val,uy_val,ueta_val};
+    c->setPrimVar(eos, tau0, e, nb, 0.4*nb, 0.,u[1]/u[0], u[2]/u[0], u[3]/u[0]);
     if (e > 0.) c->setAllM(1.);
     double eta = zmin + iz * dz;
     double coshEta = cosh(eta);
@@ -217,10 +332,10 @@ void IcIPG::setIC(Fluid* f, EoS* eos) {
     total_energy += tau0*e*dx*dy*dz*coshEta;
     double u0lab = u[0] * coshEta + u[3] * sinhEta;
     double uzlab = u[0] * sinhEta + u[3] * coshEta;
-    double dE = tau0 * ((e + p) * u[0] * u0lab - p * coshEta) * dx * dy * dz;
-    E += dE;
+    double dE = tau0 * ((e + p) * u[0] * (u[0] * cosh(eta) + u[3] * sinh(eta)) -p * cosh(eta)) *dx * dy * dz;;
     // if(zmin+iz*dz>0.)
-    Pz += tau0 * ((e + p) * u[0] * uzlab - p * sinhEta) * dx * dy * dz;
+    E+=dE;
+    Pz +=  tau0 * ((e + p) * u[0] * (u[0] * sinh(eta) + u[3] * cosh(eta)) -p * sinh(eta)) *dx * dy * dz;
     Px += tau0 * (e + p) * u[1] * u[0] * dx * dy * dz;
     Py += tau0 * (e + p) * u[2] * u[0] * dx * dy * dz;
     Nb += nb*tau0*dx*dy*dz;

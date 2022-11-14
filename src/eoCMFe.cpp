@@ -13,9 +13,6 @@
 using namespace std;
 
 
-
-//TODO: CHECK IF AUX BOUNDARIES RIGHT -> two EOS system
-
 class EoSCMFeaux {
   const double EPS_0 = 146.51751415742*0.87326281;
   const double N_0 = 0.15891*0.87272727;
@@ -41,7 +38,7 @@ double EoSCMFeaux::read_file(ifstream& stream){
   }else{
     d = atof(text.c_str());
   }
-  //cout<<d<<endl;
+ 
   return d;
 
 }
@@ -77,9 +74,7 @@ EoSCMFeaux::EoSCMFeaux(char* filename, int Ne, int Nn) {
    stab[ie][in]=read_file(fin)* N_0;      // --> s[1/fm3]
    mubtab[ie][in]=read_file(fin)/ 1000.0;  // --> mub[GeV]
    mustab[ie][in]=read_file(fin)/ 1000.0;  // --> mus[GeV]
-   //if(ie==ne-1 && in>nn-10 && in<nn){
-    //cout<<ie<<" "<<in<<" "<<etab[ie]<<" "<<etab[ie]*1000/EPS_0<<" "<<ntab[in]<<" "<<ntab[in]/N_0<<" "<<Ttab[ie][in]<<" "<< ptab[ie][in]<<" "<< stab[ie][in]<<" "<< mubtab[ie][in]<<" "<< mustab[ie][in]<<endl;
-   //}
+
   }
  emin = etab[0];
  emax = etab[ne - 1];
@@ -145,11 +140,7 @@ void EoSCMFeaux::get(double e, double nb, double& p, double& T, double& mub,
    }
    
  }
- /*if(T<0.0010){
-   T = mub = mus = p = 0.0;
- }else if(T>0.5){
-   T=0.5;
- }*/
+ 
  if (p < 0.0) p = 0.0;
 }
 
@@ -172,9 +163,6 @@ double EoSCMFeaux::p(double e, double nb) {
  double p = 0.0;
  for (int je = 0; je < 2; je++)
   for (int jn = 0; jn < 2; jn++) p += we[je] * wn[jn] * ptab[ie + je][in + jn];
- if(e>0.000327132 && e<0.000327134){
-   cout<<p<<endl;
- }
 
  if(isnan(p)) {
    if(e> 0.8*EPS_0  || nb> 40.*N_0){
@@ -208,9 +196,7 @@ void EoSCMFe::eos(double e, double nb, double nq, double ns, double& T,
   T = 0.15120476935 * pow(e, 0.25);
   mub = mus = 0.0;
  }
- if(e<0.00043034 && e>0.00043032){
-   cout<<"CMFe"<<endl;
- }
+
  muq = 0.0;  
 }
 

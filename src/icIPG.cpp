@@ -15,7 +15,7 @@
 
 using namespace std;
 
-IcIPG::IcIPG(Fluid* f, const char* filename, double _tau0, const char* setup) {
+IcIPG::IcIPG(Fluid* f, const char* filename, double _tau0, const char* setup, int _momentum_aniso) {
  cout << "loading IPG\n";
  nx = f->getNX();
  ny = f->getNY();
@@ -44,6 +44,7 @@ IcIPG::IcIPG(Fluid* f, const char* filename, double _tau0, const char* setup) {
  nsigma = 0.6;
  neta0 = 1.4;
  cout << "IPG: setup for 200 GeV RHIC\n";
+ momentum_aniso=_momentum_aniso;
  
 
  nsmoothx = (int)(3.0 * Rg / dx);  // smoothly distribute to +- this many cells
@@ -323,6 +324,11 @@ void IcIPG::setIC(Fluid* f, EoS* eos) {
     ux_val=sNorm * ux[ix][iy][iz]/ nevents / dx / dy;
     uy_val=sNorm * uy[ix][iy][iz]/ nevents / dx / dy;
     ueta_val=sNorm * ueta[ix][iy][iz]/ nevents / dx / dy;
+    if(momentum_aniso==1){
+         ueta_val=ueta_val+uy_val+ux_val;
+         uy_val=0;
+         ux_val=0;
+    }
     double u[4] = {utau_val,ux_val,uy_val,ueta_val};
     c->setPrimVar(eos, tau0, e, nb, 0.4*nb, 0.,u[1]/u[0], u[2]/u[0], u[3]/u[0]);
     if (e > 0.) c->setAllM(1.);

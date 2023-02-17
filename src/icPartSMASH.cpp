@@ -15,7 +15,7 @@
 using namespace std;
 
 IcPartSMASH::IcPartSMASH(Fluid* f, const char* filename, double _Rgt, double _Rgz,
-                         double _tau0) {
+                         double _tau0, int _momentum_aniso) {
  nx = f->getNX();
  ny = f->getNY();
  nz = f->getNZ();
@@ -28,7 +28,7 @@ IcPartSMASH::IcPartSMASH(Fluid* f, const char* filename, double _Rgt, double _Rg
  ymax = f->getY(ny - 1);
  zmin = f->getZ(0);
  zmax = f->getZ(nz - 1);
-
+ momentum_aniso=_momentum_aniso;
  tau0 = _tau0;
  Rgx = _Rgt;
  Rgy = _Rgt;
@@ -249,10 +249,22 @@ void IcPartSMASH::setIC(Fluid* f, EoS* eos) {
      vx = vy = vz = 0.0;
     }
     Cell* c = f->getCell(ix, iy, iz);
-    c->setPrimVar(eos, tau0, e, nb, nq, ns, vx, vy, vz);
-    if (e > 0.) c->setAllM(1.);
+    double u[4] ={0.,0.,0.,0.}; 
     const double gamma = 1.0 / sqrt(1.0 - vx * vx - vy * vy - vz * vz);
-    double u[4] = {gamma, gamma * vx, gamma * vy, gamma * vz};
+    if(momentum_aniso==1){
+      u[0] = gamma;
+      u[3]=  (vx+vy+vz)*gamma;
+      c->setPrimVar(eos, tau0, e, nb,nq, ns, 0., 0., u[3]/u[0]);
+      if (e > 0.) c->setAllM(1.);
+    }else{
+      c->setPrimVar(eos, tau0, e, nb, nq, ns, vx, vy, vz);
+      if (e > 0.) c->setAllM(1.);
+      u[0] = gamma;
+      u[1]=  vx*gamma;
+      u[2]=  vy*gamma;
+      u[3]=  vz*gamma;
+    }
+    
     double eta = zmin + iz * dz;
     E += tau0 * ((e + p) * u[0] * (u[0] * cosh(eta) + u[3] * sinh(eta)) -
                  p * cosh(eta)) *

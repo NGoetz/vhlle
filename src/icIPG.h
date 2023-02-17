@@ -15,6 +15,7 @@ private:
  double nsigma; // width of gaussian for baryon density
  double neta0; // mean of gaussian for baryon density
  double etaM;
+ int momentum_aniso;
  double A; // initial shear flow constant
  int nx, ny, nz, nevents;
  int n_grid;
@@ -42,7 +43,7 @@ private:
  void makeSmoothTable(int npart);
 
 public:
- IcIPG(Fluid *f, const char *filename, double tau0, const char* setup);
+ IcIPG(Fluid *f, const char *filename, double tau0, const char* setup, int momentum_aniso);
  ~IcIPG();
  double interpolateGrid(double x, double y,double** grid);
  void setIC(Fluid *f, EoS *eos);

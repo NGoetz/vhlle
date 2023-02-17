@@ -5,7 +5,7 @@ class EoS;
 
 class IcPartSMASH {
 private:
- int nx, ny, nz, nevents;
+ int nx, ny, nz, nevents, momentum_aniso;
  double xmin, xmax, ymin, ymax, zmin, zmax;
  double dx, dy, dz;
  double ***T00, ***T0x, ***T0y, ***T0z, ***QB, ***QE;
@@ -73,7 +73,7 @@ private:
                -9952212, -9962112, -9962212, -9972112, -9972212};
 
 public:
- IcPartSMASH(Fluid *f, const char *filename, double _Rgt, double _Rgz, double tau0);
+ IcPartSMASH(Fluid *f, const char *filename, double _Rgt, double _Rgz, double tau0, int momentum_aniso);
  ~IcPartSMASH();
  void setIC(Fluid *f, EoS *eos);
 };

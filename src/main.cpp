@@ -52,6 +52,7 @@ string collSystem, outputDir, isInputFile;
 double etaS, zetaS, eCrit, eEtaSMin, al, ah, aRho, T0, etaSMin;
 int icModel,glauberVariable =1;  // icModel=1 for pure Glauber, 2 for table input (Glissando etc)
 double epsilon0, Rgt, Rgz, impactPar, s0ScaleFactor;
+int momentum_aniso=0;
 
 void setDefaultParameters() {
  tauResize = 4.0;
@@ -126,6 +127,8 @@ void readParameters(char *parFile) {
    etaSparam = atoi(parValue);
   else if (strcmp(parName, "aRho") == 0)
    aRho = atof(parValue);
+  else if (strcmp(parName, "momentum_aniso") == 0)
+   momentum_aniso = atoi(parValue);
   else if (strcmp(parName, "ah") == 0)
    ah = atof(parValue);
   else if (strcmp(parName, "al") == 0)
@@ -316,7 +319,7 @@ int main(int argc, char **argv) {
    ic->setIC(f, eos);
    delete ic;
  } else if (icModel == 6){ // SMASH IC
-   IcPartSMASH *ic = new IcPartSMASH(f, isInputFile.c_str(), Rgt, Rgz, tau0);
+   IcPartSMASH *ic = new IcPartSMASH(f, isInputFile.c_str(), Rgt, Rgz, tau0, momentum_aniso);
    ic->setIC(f, eos);
    delete ic;
  } else if(icModel==7){ // IC from Trento
@@ -324,7 +327,7 @@ int main(int argc, char **argv) {
    ic->setIC(f, eos);
    delete ic;
  } else if(icModel==8){ // IC from IPG
-   IcIPG *ic = new IcIPG(f, isInputFile.c_str(), tau0, collSystem.c_str());
+   IcIPG *ic = new IcIPG(f, isInputFile.c_str(), tau0, collSystem.c_str(),momentum_aniso);
    ic->setIC(f, eos);
    delete ic;
  } else {

@@ -253,7 +253,7 @@ void IcPartSMASH::setIC(Fluid* f, EoS* eos) {
     const double gamma = 1.0 / sqrt(1.0 - vx * vx - vy * vy - vz * vz);
     if(momentum_aniso==1){
       u[0] = gamma;
-      u[3]=  (vx+vy+vz)*gamma;
+      u[3]=  (vz)*gamma;
       c->setPrimVar(eos, tau0, e, nb,nq, ns, 0., 0., u[3]/u[0]);
       if (e > 0.) c->setAllM(1.);
     }else{

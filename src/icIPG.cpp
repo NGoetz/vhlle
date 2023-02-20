@@ -325,7 +325,7 @@ void IcIPG::setIC(Fluid* f, EoS* eos) {
     uy_val=sNorm * uy[ix][iy][iz]/ nevents / dx / dy;
     ueta_val=sNorm * ueta[ix][iy][iz]/ nevents / dx / dy;
     if(momentum_aniso==1){
-         ueta_val=ueta_val+uy_val+ux_val;
+         ueta_val=ueta_val;
          uy_val=0;
          ux_val=0;
     }

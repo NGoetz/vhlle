@@ -325,11 +325,11 @@ void IcIPG::setIC(Fluid* f, EoS* eos) {
     uy_val=sNorm * uy[ix][iy][iz]/ nevents / dx / dy;
     ueta_val=sNorm * ueta[ix][iy][iz]/ nevents / dx / dy;
     if(momentum_aniso==1){
-         ueta_val=ueta_val;
+         ueta_val=sqrt(1.0-utau_val*utau_val);
          uy_val=0;
          ux_val=0;
     }
-    double u[4] = {utau_val,ux_val,uy_val,sqrt(1.0-ueta_val*ueta_val)};
+    double u[4] = {utau_val,ux_val,uy_val,ueta_val};
     c->setPrimVar(eos, tau0, e, nb, 0.4*nb, 0.,u[1]/u[0], u[2]/u[0], u[3]/u[0]);
     if (e > 0.) c->setAllM(1.);
     double eta = zmin + iz * dz;
